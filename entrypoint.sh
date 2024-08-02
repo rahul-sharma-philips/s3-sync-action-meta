@@ -17,6 +17,11 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
   exit 1
 fi
 
+if [ -z "$AWS_USER_METADATA" ]; then
+  echo "AWS_USER_METADATA is not set. Quitting."
+  exit 1
+fi
+
 # Default to us-east-1 if AWS_REGION not set.
 if [ -z "$AWS_REGION" ]; then
   AWS_REGION="us-east-1"

@@ -42,12 +42,25 @@ ${AWS_REGION}
 text
 EOF
 
-# Sync using our dedicated profile and suppress verbose messages.
-# All other flags are optional via the `args:` directive.
-sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
-              --profile s3-sync-action \
-              --no-progress \
-              ${ENDPOINT_APPEND} $*"
+# Use find to locate all files with the specified extension
+find "$SOURCE_DIR" -type f -name "*.zip" | while read -r file; do
+    # Process each file here
+    hash_value=$(openssl dgst -binary -sha256 "$file" | openssl base64)
+    # echo For file: "$file" "SHA-256 hash: $hash_value"
+    
+    # Extract the filename without path
+    filename=$(basename "$file")
+    trimmed_path="${file#$SOURCE_DIR/}"
+
+    echo "For trimmed_path: $trimmed_path SHA-256 hash: $hash_value"
+
+    # Upload to S3 with metadata
+    aws s3 cp "$file" s3://${AWS_S3_BUCKET}/"$trimmed_path" \
+            --metadata '{"HashSHA256":"'$hash_value'"}' 
+
+    echo "Uploaded for trimmed_path: $trimmed_path SHA-256 hash: $hash_value"
+    
+done
 
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of

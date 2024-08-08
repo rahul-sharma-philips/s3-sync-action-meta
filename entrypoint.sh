@@ -90,8 +90,13 @@ if [ "$MODE" = "S3" ]; then
   aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
   
 else
-  curl -urahul.sharma@philips.com:<PASSWORD> -T <PATH_TO_FILE> "https://artifactory.hsdp.io/artifactory/hsp-generic-local/<TARGET_FILE_PATH>"
-  
+  # Use find to locate all files with the specified extension
+  find "$SOURCE_DIR" -type f -name "*.zip" | while read -r file; do
+    
+    curl -u$ARTIFACTORY_USER:ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT"
+    filename=$(basename "$file")
+    echo "Uploaded file: $filename to Artifactory endpoint $ARTIFACTORY_ENDPOINT"
+  done
 fi
 
 null

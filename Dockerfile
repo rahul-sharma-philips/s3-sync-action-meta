@@ -16,6 +16,10 @@ ENV AWSCLI_VERSION='1.18.14'
 # Install OpenSSL
 RUN apk update && \
     apk add --no-cache openssl
+    
+# Install Curl
+RUN apk update && \ 
+    apk add --no-cache curl
 
 RUN pip install --quiet --no-cache-dir awscli==${AWSCLI_VERSION}
 

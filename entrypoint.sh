@@ -61,34 +61,30 @@ if [ "$MODE" = "UPLOAD" ]; then
     curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/$filename"
     echo "Uploaded file: $filename to Artifactory endpoint: $ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"  
   done
+  exit 0
 fi
 
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
-#aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
-#${AWS_ACCESS_KEY_ID}
-#${AWS_SECRET_ACCESS_KEY}
-#${AWS_REGION}
-#text
-#EOF
-  
-#if [ "$MODE" = "DOWNLOAD" ]; then
+aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
+${AWS_ACCESS_KEY_ID}
+${AWS_SECRET_ACCESS_KEY}
+${AWS_REGION}
+text
+EOF
 
+curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/common_util.zip" | \
+aws s3 cp -  s3://$AWS_S3_BUCKET/$ARTIFACTORY_RELEASE_PATH --region $AWS_REGION
 
-  #curl -u $ARTIFACTORY_USER:ARTIFACTORY_SECRET "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH" | \
-  #aws s3 cp -  s3://$AWS_S3_BUCKET/$ARTIFACTORY_RELEASE_PATH --region $AWS_REGION
+# Clear out credentials after we're done.
+# We need to re-run `aws configure` with bogus input instead of
+# deleting ~/.aws in case there are other credentials living there.
+# https://forums.aws.amazon.com/thread.jspa?threadID=148833
+aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
 
-
-  # Clear out credentials after we're done.
-  # We need to re-run `aws configure` with bogus input instead of
-  # deleting ~/.aws in case there are other credentials living there.
-  # https://forums.aws.amazon.com/thread.jspa?threadID=148833
-  #aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
-#fi
-
-#null
-#null
-#null
-#text
-#EOF
+null
+null
+null
+text
+EOF

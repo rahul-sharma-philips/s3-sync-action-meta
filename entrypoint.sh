@@ -57,8 +57,8 @@ fi
 if [ "$MODE" = "UPLOAD" ]; then
   # Use find to locate all files with the specified extension
   find "$SOURCE_DIR" -type f -name "*.zip" | while read -r file; do
-    curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"
     filename=$(basename "$file")
+    curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/$filename"
     echo "Uploaded file: $filename to Artifactory endpoint: $ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"  
   done
 fi

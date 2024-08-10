@@ -25,6 +25,7 @@ def get_artifactory_files(repo_url):
     print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
     headers = {
         "X-JFrog-Art-Api": ARTIFACTORY_PASSWORD  # API key header
+        "Content-Type": "application/json"
     }
     try:
         response = requests.get(repo_url, headers=headers)
@@ -53,7 +54,7 @@ def main():
     files = get_artifactory_files(repo_url)
 
     for file_uri in files:
-        file_url = f"{repo_url}{file_uri}"
+        file_url = "https://artifactory.hsdp.io/artifactory/hsp-generic-local/com/philips/hsdp-dp/IAM_EXTN/CICD/v1.0.0.0/"#f"{repo_url}{file_uri}"
         s3_key = file_uri.lstrip('/')  # Adjust as necessary for your S3 structure
         upload_file_to_s3(file_url, AWS_S3_BUCKET, s3_key)
 

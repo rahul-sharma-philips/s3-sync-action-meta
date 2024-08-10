@@ -24,6 +24,7 @@ def get_artifactory_files(repo_url):
     response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
     response.raise_for_status()
     files = response.json()
+    print(f" fetched file",files)
     return [file['uri'] for file in files['files']]
 
 def upload_file_to_s3(file_url, s3_bucket, s3_key):

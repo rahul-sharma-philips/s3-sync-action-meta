@@ -16,6 +16,8 @@ ENV AWSCLI_VERSION='1.18.14'
 # Install necessary packages
 RUN pip install boto3 requests
 
+COPY upload_artifactory_to_s3.py /app/
+
 # Install OpenSSL
 RUN apk update && \
     apk add --no-cache openssl

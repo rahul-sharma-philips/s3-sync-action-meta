@@ -40,7 +40,7 @@ def get_artifactory_files(repo_url):
                 print(f"Error: The response from Artifactory is not in JSON format. Response content: {response.text}")
                 return []
         else:
-            soup = BeautifulSoup(html_content, 'html.parser')
+            soup = BeautifulSoup(response.text, 'html.parser')
             # Find all <a> tags in the <pre> block
             pre_block = soup.find('pre')
             if pre_block:

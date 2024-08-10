@@ -29,12 +29,17 @@ def get_artifactory_files(repo_url):
     try:
         response = requests.get(repo_url, headers=headers)
         response.raise_for_status()
-        try:
-            files = response.json()
-            return [file['uri'] for file in files['files']]
-        except requests.exceptions.JSONDecodeError:
-            print(f"Error: The response from Artifactory is not in JSON format. Response content: {response.text}")
-            return []
+        # Check that the content type is application/json
+        content_type = response.headers.get('Content-Type', '')
+        if 'application/json' in content_type:
+            try:
+                files = response.json()
+                return [file['uri'] for file in files['files']]
+            except requests.exceptions.JSONDecodeError:
+                print(f"Error: The response from Artifactory is not in JSON format. Response content: {response.text}")
+                return []
+        else:
+            soup = BeautifulSoup(html_content, 'html.parser')
 
     except requests.exceptions.RequestException as e:
         print(f"Error: Failed to retrieve files from Artifactory. {e}")

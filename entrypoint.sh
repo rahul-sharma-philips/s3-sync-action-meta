@@ -61,7 +61,7 @@ if [ "$MODE" = "UPLOAD" ]; then
     curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/$filename"
     echo "Uploaded file: $filename to Artifactory endpoint: $ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"  
   done
-  exit 0
+  #exit 0
 fi
 
 # Run the Python script

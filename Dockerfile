@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 
 LABEL "com.github.actions.name"="S3 Sync"
 LABEL "com.github.actions.description"="Sync a directory to an AWS S3 repository"
@@ -14,7 +14,7 @@ LABEL maintainer="Rahul Sharma <rahul.sharma@philips.com>"
 ENV AWSCLI_VERSION='1.18.14'
 
 # Install necessary packages
-RUN pip install boto3 requests
+RUN pip install boto3==1.28.0 botocore==1.31.0 requests
 
 COPY upload_artifactory_to_s3.py /app/
 

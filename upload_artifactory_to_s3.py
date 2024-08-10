@@ -1,7 +1,6 @@
 import os
 import requests
 import boto3
-from botocore.exceptions import NoCredentialsError
 
 # Artifactory and AWS credentials
 ARTIFACTORY_URL = os.getenv('ARTIFACTORY_ENDPOINT')  # e.g., "https://artifactory.example.com/artifactory"
@@ -31,11 +30,9 @@ def upload_file_to_s3(file_url, s3_bucket, s3_key):
     # Stream file from Artifactory and upload to S3
     with requests.get(file_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD), stream=True) as response:
         response.raise_for_status()
-        try:
-            s3_client.upload_fileobj(response.raw, s3_bucket, s3_key)
-            print(f"Successfully uploaded {s3_key} to S3")
-        except NoCredentialsError:
-            print("Credentials not available")
+        s3_client.upload_fileobj(response.raw, s3_bucket, s3_key)
+        print(f"Successfully uploaded {s3_key} to S3")
+
 
 def main():
     repo_url = f"{ARTIFACTORY_URL}/{ARTIFACTORY_REPO}/"

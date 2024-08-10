@@ -4,10 +4,10 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 
 # Artifactory and AWS credentials
-ARTIFACTORY_URL = os.getenv('ARTIFACTORY_URL')  # e.g., "https://artifactory.example.com/artifactory"
-ARTIFACTORY_REPO = os.getenv('ARTIFACTORY_REPO')  # e.g., "my-repo"
-ARTIFACTORY_USERNAME = os.getenv('ARTIFACTORY_USERNAME')
-ARTIFACTORY_PASSWORD = os.getenv('ARTIFACTORY_PASSWORD')
+ARTIFACTORY_URL = os.getenv('ARTIFACTORY_ENDPOINT')  # e.g., "https://artifactory.example.com/artifactory"
+ARTIFACTORY_REPO = os.getenv('ARTIFACTORY_RELEASE_PATH')  # e.g., "my-repo"
+ARTIFACTORY_USERNAME = os.getenv('ARTIFACTORY_USER')
+ARTIFACTORY_PASSWORD = os.getenv('ARTIFACTORY_SECRET')
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')

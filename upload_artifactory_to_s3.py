@@ -1,6 +1,7 @@
 import os
 import requests
 import boto3
+from bs4 import BeautifulSoup
 
 # Artifactory and AWS credentials
 ARTIFACTORY_URL = os.getenv('ARTIFACTORY_ENDPOINT')  # e.g., "https://artifactory.example.com/artifactory"

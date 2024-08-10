@@ -23,12 +23,19 @@ def get_artifactory_files(repo_url):
     # Get the list of files from Artifactory
     print("repo_url",repo_url)
     print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
-    response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
-    print("response",response)
-    response.raise_for_status()
-    files = response.json()
-    print(f" fetched file",files)
-    return [file['uri'] for file in files['files']]
+    try:
+        response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
+        response.raise_for_status()
+        try:
+            files = response.json()
+            return [file['uri'] for file in files['files']]
+        except requests.exceptions.JSONDecodeError:
+            print(f"Error: The response from Artifactory is not in JSON format. Response content: {response.text}")
+            return []
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error: Failed to retrieve files from Artifactory. {e}")
+        return []
 
 def upload_file_to_s3(file_url, s3_bucket, s3_key):
     # Stream file from Artifactory and upload to S3

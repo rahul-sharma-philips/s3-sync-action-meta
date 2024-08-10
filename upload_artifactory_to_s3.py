@@ -49,7 +49,6 @@ def get_artifactory_files(repo_url):
                     if href.endswith('.zip'):
                         zip_files.append(href)
                 return zip_files
-
     except requests.exceptions.RequestException as e:
         print(f"Error: Failed to retrieve files from Artifactory. {e}")
         return []
@@ -68,7 +67,7 @@ def main():
 
     for file_uri in files:
         file_url = f"{repo_url}/{file_uri}" #f"{repo_url}{file_uri}"
-        s3_key = file_uri.lstrip('/')  # Adjust as necessary for your S3 structure
+        s3_key = f"{ARTIFACTORY_REPO}{file_uri}" #file_uri.lstrip('/')  # Adjust as necessary for your S3 structure
         upload_file_to_s3(file_url, AWS_S3_BUCKET, s3_key)
 
 if __name__ == "__main__":

@@ -40,6 +40,15 @@ def get_artifactory_files(repo_url):
                 return []
         else:
             soup = BeautifulSoup(html_content, 'html.parser')
+            # Find all <a> tags in the <pre> block
+            pre_block = soup.find('pre')
+            if pre_block:
+                zip_files = []
+                for link in pre_block.find_all('a'):
+                    href = link.get('href')
+                    if href.endswith('.zip'):
+                        zip_files.append(href)
+                return zip_files
 
     except requests.exceptions.RequestException as e:
         print(f"Error: Failed to retrieve files from Artifactory. {e}")
@@ -58,7 +67,7 @@ def main():
     files = get_artifactory_files(repo_url)
 
     for file_uri in files:
-        file_url = "https://artifactory.hsdp.io/artifactory/hsp-generic-local/com/philips/hsdp-dp/IAM_EXTN/CICD/v1.0.0.0/"#f"{repo_url}{file_uri}"
+        file_url = f"{repo_url}/{file_uri}" #f"{repo_url}{file_uri}"
         s3_key = file_uri.lstrip('/')  # Adjust as necessary for your S3 structure
         upload_file_to_s3(file_url, AWS_S3_BUCKET, s3_key)
 

@@ -24,6 +24,7 @@ def get_artifactory_files(repo_url):
     print("repo_url",repo_url)
     print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
     response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
+    print("response",response)
     response.raise_for_status()
     files = response.json()
     print(f" fetched file",files)

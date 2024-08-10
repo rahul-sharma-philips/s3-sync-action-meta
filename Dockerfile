@@ -14,7 +14,7 @@ LABEL maintainer="Rahul Sharma <rahul.sharma@philips.com>"
 ENV AWSCLI_VERSION='1.18.14'
 
 # Install necessary packages
-RUN pip install boto3==1.26.90 botocore==1.31.0 requests
+RUN pip install boto3 botocore requests
 
 COPY upload_artifactory_to_s3.py /app/
 

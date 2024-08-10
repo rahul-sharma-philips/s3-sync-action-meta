@@ -23,8 +23,11 @@ def get_artifactory_files(repo_url):
     # Get the list of files from Artifactory
     print("repo_url",repo_url)
     print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
+    headers = {
+        "X-JFrog-Art-Api": ARTIFACTORY_PASSWORD  # API key header
+    }
     try:
-        response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
+        response = requests.get(repo_url, headers=headers)
         response.raise_for_status()
         try:
             files = response.json()

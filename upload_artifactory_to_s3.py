@@ -25,7 +25,6 @@ def get_artifactory_files(repo_url):
     print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
     headers = {
         "X-JFrog-Art-Api": ARTIFACTORY_PASSWORD  # API key header
-        "Content-Type": "application/json"
     }
     try:
         response = requests.get(repo_url, headers=headers)

@@ -43,12 +43,16 @@ def get_artifactory_files(repo_url):
             soup = BeautifulSoup(response.text, 'html.parser')
             # Find all <a> tags in the <pre> block
             pre_block = soup.find('pre')
+            print("pre_block...", pre_block)
             if pre_block:
                 zip_files = []
                 for link in pre_block.find_all('a'):
+                    print("zip_files...", zip_files)
                     href = link.get('href')
                     if href.endswith('.zip'):
                         zip_files.append(href)
+                        print("zip_files.append...", zip_files)
+                print("final zip_files...", zip_files)
                 return zip_files
     except requests.exceptions.RequestException as e:
         print(f"Error: Failed to retrieve files from Artifactory. {e}")

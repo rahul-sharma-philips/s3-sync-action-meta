@@ -49,7 +49,7 @@ def upload_file_to_s3(file_url, s3_bucket, s3_key):
 
 
 def main():
-    repo_url = f"{ARTIFACTORY_URL}/{ARTIFACTORY_REPO}/"
+    repo_url = f"{ARTIFACTORY_URL}/{ARTIFACTORY_REPO}"
     files = get_artifactory_files(repo_url)
 
     for file_uri in files:

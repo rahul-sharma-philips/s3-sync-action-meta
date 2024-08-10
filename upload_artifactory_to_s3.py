@@ -21,6 +21,8 @@ s3_client = boto3.client(
 
 def get_artifactory_files(repo_url):
     # Get the list of files from Artifactory
+    print("repo_url",repo_url)
+    print("ARTIFACTORY_USERNAME",ARTIFACTORY_USERNAME)
     response = requests.get(repo_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD))
     response.raise_for_status()
     files = response.json()

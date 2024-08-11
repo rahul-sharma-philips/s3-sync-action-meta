@@ -55,7 +55,23 @@ def upload_file_to_s3(file_url, s3_bucket, s3_key):
     # Stream file from Artifactory and upload to S3
     with requests.get(file_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD), stream=True) as response:
         response.raise_for_status()
-        s3_client.upload_fileobj(response.raw, s3_bucket, s3_key)
+        
+        # Initialize the hash object
+        sha256_hash = hashlib.sha256()
+        # Define a generator to stream the data and update the hash
+        def file_stream():
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:  # filter out keep-alive new chunks
+                    sha256_hash.update(chunk)
+                    yield chunk
+        # Upload to S3 with computed SHA-256 hash
+        s3_client.upload_fileobj(
+            Fileobj=file_stream(),
+            Bucket=s3_bucket,
+            Key=s3_key,
+            ExtraArgs={'Metadata': {'sha256': sha256_hash.hexdigest()}}
+        )
+        #s3_client.upload_fileobj(response.raw, s3_bucket, s3_key)
         print(f"Successfully uploaded {s3_key} to S3")
 
 

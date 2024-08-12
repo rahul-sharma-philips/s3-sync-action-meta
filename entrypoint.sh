@@ -26,7 +26,7 @@ if [ -z "$ARTIFACTORY_RELEASE_PATH" ]; then
 fi
 
 
-if [ "$MODE" = "DOWNLOAD" ]; then
+if [ "$MODE" = "DOWNLOAD" ] || [ "$MODE" = "DUAL" ]; then
   # Below settings are valid for both modes.
   if [ -z "$AWS_S3_BUCKET" ]; then
     echo "AWS_S3_BUCKET is not set. Quitting."
@@ -54,7 +54,7 @@ if [ "$MODE" = "DOWNLOAD" ]; then
   fi
 fi
 
-if [ "$MODE" = "UPLOAD" ]; then
+if [ "$MODE" = "UPLOAD" ] || [ "$MODE" = "DUAL" ]; then
   # Use find to locate all files with the specified extension
   find "$SOURCE_DIR" -type f -name "*.zip" | while read -r file; do
     filename=$(basename "$file")

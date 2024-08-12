@@ -61,7 +61,9 @@ if [ "$MODE" = "UPLOAD" ] || [ "$MODE" = "DUAL" ]; then
     curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/$filename"
     echo "Uploaded file: $filename to Artifactory endpoint: $ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"  
   done
-  #exit 0
+  if [ "$MODE" = "UPLOAD" ] 
+    exit 0
+  fi
 fi
 
 # Run the Python script

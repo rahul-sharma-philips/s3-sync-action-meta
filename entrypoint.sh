@@ -61,7 +61,7 @@ if [ "$MODE" = "UPLOAD" ] || [ "$MODE" = "DUAL" ]; then
     curl -u$ARTIFACTORY_USER:$ARTIFACTORY_SECRET -T "$file" "$ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH/$filename"
     echo "Uploaded file: $filename to Artifactory endpoint: $ARTIFACTORY_ENDPOINT/$ARTIFACTORY_RELEASE_PATH"  
   done
-  if [ "$MODE" = "UPLOAD" ] 
+  if [ "$MODE" = "UPLOAD" ]; then
     exit 0
   fi
 fi

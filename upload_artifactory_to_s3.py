@@ -52,6 +52,39 @@ def get_artifactory_files(repo_url):
         print(f"Error: Failed to retrieve files from Artifactory. {e}")
         return []
 
+class StreamWrapper:
+    def __init__(self, generator):
+        self.generator = generator
+        self.leftover = b""
+
+    def read(self, size=-1):
+        if size == -1:
+            size = 1024 * 1024  # 1MB default read size
+
+        chunks = []
+        remaining_size = size
+
+        # Use leftover data if any
+        if self.leftover:
+            chunks.append(self.leftover)
+            remaining_size -= len(self.leftover)
+            self.leftover = b""
+
+        try:
+            while remaining_size > 0:
+                chunk = next(self.generator)
+                if len(chunk) > remaining_size:
+                    chunks.append(chunk[:remaining_size])
+                    self.leftover = chunk[remaining_size:]
+                    break
+                chunks.append(chunk)
+                remaining_size -= len(chunk)
+
+        except StopIteration:
+            pass
+
+        return b"".join(chunks)
+
 def upload_file_to_s3(file_url, s3_bucket, s3_key):
     # Stream file from Artifactory and upload to S3
     with requests.get(file_url, auth=(ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD), stream=True) as response:
@@ -65,9 +98,13 @@ def upload_file_to_s3(file_url, s3_bucket, s3_key):
                 if chunk:  # filter out keep-alive new chunks
                     sha256_hash.update(chunk)
                     yield chunk
+        
+        # Use the custom stream wrapper
+        stream_wrapper = StreamWrapper(file_stream())
+        
         # Upload to S3 with computed SHA-256 hash
         s3_client.upload_fileobj(
-            Fileobj=file_stream(),
+            Fileobj=stream_wrapper,
             Bucket=s3_bucket,
             Key=s3_key,
             ExtraArgs={'Metadata': {'sha256': sha256_hash.hexdigest()}}

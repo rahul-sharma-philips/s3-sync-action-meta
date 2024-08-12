@@ -1,6 +1,7 @@
 import os
 import requests
 import boto3
+import hashlib
 from bs4 import BeautifulSoup
 
 # Artifactory and AWS credentials
